@@ -1,8 +1,6 @@
 # A mass cytometry workflow environment
-FROM continuumio/miniconda3:4.12.0
+FROM continuumio/miniconda3:4.14.0
 ENV CONDA_PREFIX /opt/conda
-
-RUN conda update -y conda
 
 RUN pip install --upgrade pip && \
     pip install pyyaml
