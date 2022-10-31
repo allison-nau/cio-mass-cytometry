@@ -21,6 +21,8 @@ dependencies:
 - bioconductor-limma=3.46.0
 - bioconductor-catalyst=1.14.0
 - jupyterlab=3.0.14
+- matplotlib-base=3.5.3
+- matplotlib-inline=0.1.6
 - pandas=1.4.4
 - scikit-learn=1.1.2
 - statsmodels=0.13.2
@@ -28,4 +30,4 @@ dependencies:
 - seaborn=0.11.1
 - openpyxl=3.0.7
 - r-ggpubr=0.4.0
-- jupyter_contrib_nbextensions=0.5.1
+# - jupyter_contrib_nbextensions=0.5.1
