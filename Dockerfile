@@ -48,8 +48,8 @@ RUN mkdir /.jupyter && \
     chmod 777 /.jupyter
 
 
-# WORKDIR /home
-WORKDIR /immuno
+WORKDIR /home
+# WORKDIR /immuno
 
 ##ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 #ENTRYPOINT ["conda","run","--no-capture-output","-n",
