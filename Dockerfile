@@ -48,7 +48,8 @@ RUN conda list
 RUN conda install -c bioconda bioconductor-catalyst=1.22.0
 RUN conda install -c bioconda bioconductor-diffcyt=1.18.0
 RUN conda install -c bioconda bioconductor-ggcyto=1.26.0 
-RUN conda install -c conda-forge r-devtools=2.4.5
+# Trying to fix R error handling:
+# RUN conda install -c conda-forge r-devtools=2.4.5
 RUN conda install -c bioconda bioconductor-sva=3.46.0
 RUN conda install -c conda-forge r-outliers=0.15
 RUN conda install -c conda-forge r-emdist=0.3_2
