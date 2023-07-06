@@ -103,6 +103,7 @@ WORKDIR /immuno
 RUN conda list
 
 # Add Jupyter kernels?
+# Not sure these commands did anything (they certainly don't assign the right names)
 RUN R -e "IRkernel::installspec(name='R_catalystDock', displayname='R_catalystDock')"
 RUN python -m ipykernel install --user --name='py_catalystDock'
 # CMD ["python", "-m", "ipykernel", "install", "--user", "--name='py_catalystDock'"]
