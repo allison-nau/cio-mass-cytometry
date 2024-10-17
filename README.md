@@ -170,7 +170,8 @@ Save primary per-cell data and cell-type frequency, cell-type expression, and ps
 - `WORKFLOW/stage_2/Data_03_cell_type_expression_mean_median.csv`: For each cell type in each sample, the mean and median expressions of each marker.
 - `WORKFLOW/stage_2/Data_04_pseudobulk_expression_mean_median.csv`: For each sample, the pseudobulk mean and median expression of each marker.
 
-### [notebooks/09 - R - Pre vs Post statisitcs.ipynb](TODO: Add Link for jason's github)
+### [notebooks/09 - R - Pre vs Post statisitcs.ipynb](https://github.com/allison-nau/cio-mass-cytometry/blob/e3cf4660abc4b87f57b6ee7c58f68ee4530209ce/notebooks/09%20-%20R%20-%20Pre%20vs%20Post%20statisitcs.ipynb)
+### [notebooks/09 - R - Pre vs Post statisitcs.ipynb](TODO: Add Link for jason's github)  
 
 Uses diffcyt to calculate preliminary statistics for any desired models. The example shown here is pre vs post, regardless of response, for each of the following: differential abundance (cell population frequency), differential state for each functional marker for each cell population, and pseudobulk differenntial state for each functional marker with all non-excluded clusters combined.
 
