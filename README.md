@@ -52,7 +52,7 @@ This gives us a simulated cohort with:
 **Post:** Creates 3 directories:
 
 - `data/`: Contains FCS files `*.fcs`.
-- `WORKFLOW/`: Will be used to save all files, figures, and data from the run. Divided into `stage_1/` with QC and over-clustering (unlabeled) used to make the clustering worksheet, and `stage_2/` where we use the completed annotated clustering worksheet to finish the feature extraction. Contains a pre-made metadata template (`stage_1/03-INPUT-metadata-completed.xlsx`) you can use as a reference or directly, and a pre-made labeled clustering (`stage_2/06-INPUT-stage2-annotated-clusters-50.xlsx`) you can use as a reference or directly. Note that the pre-made labeled clustering may be subject to stochastic changes in other environments, so you should review and fill in your clustering worksheet accordingly.
+- `WORKFLOW/`: Will be used to save all files, figures, and data from the run. Divided into `stage_1/` with QC and over-clustering (unlabeled) used to make the clustering worksheet, `stage_2/` where we use the completed annotated clustering worksheet to finish the feature extraction, and `stage_2_models/` where preliminary statistical models will be stored. Contains a pre-made metadata template (`stage_1/03-INPUT-metadata-completed.xlsx`) you can use as a reference or directly, and a pre-made labeled clustering (`stage_2/06-INPUT-stage2-annotated-clusters-50.xlsx`) you can use as a reference or directly. Note that the pre-made labeled clustering may be subject to stochastic changes in other environments, so you should review and fill in your clustering worksheet accordingly.
 - `scripts/`: Copy of our helper script `readDataset.R` for CATALYST to where it's easy to get to.
 
 ### [notebooks/01 - R - Get Panel details.ipynb](https://github.com/jason-weirather/cio-mass-cytometry/blob/main/notebooks/01%20-%20R%20-%20Get%20Panel%20details.ipynb)
@@ -64,6 +64,8 @@ This step extracts information about the panel run from the FCS files and ensure
 **Post:** Extracts the header table from one of the FCS files.
 
 👁️ **Review required:** You need to check that all FCS files are defined by this same table by checking that their hashes are all identical.
+  
+Note: if you discover that the naming of your fcs file parameters is inconsistent across fcs files (e.g. PD1 vs PD-1), you can use a lool like [ParkerICI/premessa::paneleditor_GUI()](https://github.com/ParkerICI/premessa) to assist in harmonizing your fcs files.
 
 ### [notebooks/02 - Python - Create metadata template.ipynb](https://github.com/jason-weirather/cio-mass-cytometry/blob/main/notebooks/02%20-%20Python%20-%20Create%20metadata%20template.ipynb)
 
@@ -77,11 +79,13 @@ We use a Python CLI created here to generate a new blank metadata template sheet
 
 ### *Not shown in notebook:* Accurately complete the metadata spreadsheet
 
-You may need to delete some headers if you don't have the information on sample annotations or add additional headers if you have more that are not included here. As described in `cio_mass_cytometry/schemas/samples.json`, the permitted annotation types are `["discrete", "timepoint", "batch", "arm", "subject"]`. If you don't know what to call something, use `discrete`.
-
-**Pre-requisites:** You start with a blank or partially filled in template `WORKFLOW/stage_1/02-metadata-template.xlsx`.
-
-**Post:** You upload your filled-in `WORKFLOW/stage_1/03-INPUT-metadata-completed.xlsx` or use the one that was placed there as an example.
+You may need to delete some headers if you don't have the information on sample annotations or add additional headers if you have more that are not included here. As described in `cio_mass_cytometry/schemas/samples.json`, the permitted annotation types are `["discrete", "timepoint", "batch", "arm", "subject"]`. If you don't know what to call something, use `discrete`.  
+  
+**Pre-requisites:** You start with a blank or partially filled in template `WORKFLOW/stage_1/02-metadata-template.xlsx`.  
+  
+**Post:** You upload your filled-in `WORKFLOW/stage_1/03-INPUT-metadata-completed.xlsx` or use the one that was placed there as an example.  
+  
+Note: if you later want to change your metadata, adjust the order the samples appear in the worksheet will have a similar effect as changing the random seed.
 
 ### [notebooks/03 - Python - Ingest the filled-in metadata.ipynb](https://github.com/jason-weirather/cio-mass-cytometry/blob/main/notebooks/03%20-%20Python%20-%20Ingest%20the%20filled-in%20metadata.ipynb)
 
@@ -89,7 +93,7 @@ Take the completed metadata spreadsheet and ingest it, creating a validated JSON
 
 **Pre-requisites:** Requires your filled-in template describing your project `WORKFLOW/stage_1/03-INPUT-metadata-completed.xlsx`.
 
-**Post:** You get a JSON format representation of your template in `WORKFLOW/stage_1/04-metadata-completed.json`.
+**Post:** You get a JSON format representation of your template in `WORKFLOW/stage_1/04-metadata-completed.json`.  
 
 ### [notebooks/04 - R - Run CATALYST stage 1.ipynb](https://github.com/jason-weirather/cio-mass-cytometry/blob/main/notebooks/04%20-%20R%20-%20Run%20CATALYST%20stage%201.ipynb)
 
@@ -106,8 +110,8 @@ Use the metadata JSON you created to run CATALYST for the first stage of the pip
 - **MDS plots:** The dimensional reduction should be inspected for any strong outlier samples that may have issues that need follow-up in FlowJo or more manual inspections. It should also be used to understand if any batch effects are prominent in the dataset because strong batch effects may interfere with clustering efficacy. In the example data, a strong difference is seen with `Timepoint` due to our simulated biological effect.
 - **NRS plots:** These can help inform what is driving the signal in the MDS plots. Here, you can see the injected signal from CD8+ T cells pushing differences in the MDS.
 - **Pseudobulk plot:** It may help to inform if some particular marker has aberrant expression on a particular sample.
-- **FlowSOM clustering:** The most important question to ask is if the clustering count is high enough to capture all the cell populations you are interested in labeling. If you try to set the clustering of FlowSOM too low, then distinct populations could be combined together erroneously. If you have batch effects present, this can be exacerbated because you may need different clusters for each batch. If you see batches in the MDS, and you see batches here, and you see batches in the upcoming UMAP, it may be time to stop and treat your batches as separate analysis projects for cell-type assignment.
-- **Type marker plot:** This is a great plot, but if you have an enormous amount of samples, you may need to omit this plot because it takes a long time to generate. This plot can be a useful reference when you are labeling your clusters because you can understand, for both phenotypic and functional markers, if their distribution indicates a cluster is a particular cell type. It could also help you see if you may have erroneously combined some populations.
+- **FlowSOM clustering:** The most important question to ask is if the clustering count is high enough to capture all the cell populations you are interested in labeling. If you try to set the clustering of FlowSOM too low, then distinct populations could be combined together erroneously. If you have batch effects present, this can be exacerbated because you may need different clusters for each batch. If you see batches in the MDS, and you see batches here, and you see batches in the upcoming UMAP, it may be time to stop and treat your batches as separate analysis projects for cell-type assignment. If you do not see all the populations you would like identified, are the type marker plot shows mixed clusters, you may need to increase the number of clusters you are generating (e.g. 14x14 SOM grid for 50 clusters).
+- **Type marker plot:** This is a great plot, but if you have an enormous amount of samples, you may need to downsample your SSE in preparation for this figure. This plot can be a useful reference when you are labeling your clusters because you can understand, for both phenotypic and functional markers, if their distribution indicates a cluster is a particular cell type. It could also help you see if you may have erroneously combined some populations.
 - **UMAP by `cluster_id`:** The clusters should look clustered on the UMAP.
 - **UMAP expression plots:** This is important to look at to see if you have expected cell populations clustered into single clusters. If you see cell populations consistently showing up in two clusters, this could indicate that either (a) you have erroneously passed in a barcoding marker as a cell typing marker (happens with CD45 sometimes), or (b) you have a batch effect, and it's time to analyze that batch separately for cell-type assignment (or execute some batch effect correcting method out of scope here).
 - **Multi-heatmap:** See cluster expression in samples to help understand any oddball samples.
@@ -142,7 +146,7 @@ Ingest the Excel spreadsheet with cluster labels and save it as a JSON.
 
 Use the cluster label JSON and the previous run of CATALYST to run the rest of the CATALYST pipeline, now with known cell labels generating figures.  
   
-If there are clusters that you would like to remove (suspected non-cells, doublets), it is done so here. It is not recommended 
+If there are clusters that you would like to remove (suspected non-cells, doublets), it is done so here. It is not recommended to remove populations that are merely not of interest, only populations that are not live singlet leukocytes.
   
 **Pre-requisites:** Requires the intermediate RDS file and UMAP embeddings, as well as the JSON-converted labels.
   
@@ -151,7 +155,7 @@ If there are clusters that you would like to remove (suspected non-cells, double
 👁️ **Review required:** There are many figures to inspect, and all may require some adjustments to properly format the image. cell_order that is used to specify cluster order in figures should be adjusted. It should also be checked that only the correct clusters are removed, or that step should be completely skipped.
   
 - **UMAP clusters:** The cell-type labeled UMAP should have cell types well clustered.
-- **Heatmap with FlowSOM labels:** This is not particularly great, but it shows both the FlowSOM and cell type labels.
+- **Heatmap with FlowSOM labels:** This is not particularly great, but it shows both the FlowSOM and cell type labels. This plot can be used to confirm that the correct clusters are being merged together.
 - **Heatmap labeled:** This is an excellent plot for verifying the cell type markers are where expected.
 - **Heatmap all markers labeled:** Even better, this has the functional markers too.
 - **Stacked bar plots:** You may need to modify the workflow to generate more of these, because if you have things like Arm and Response, it will probably be necessary to plot these for each of those.
@@ -173,7 +177,12 @@ Save primary per-cell data and cell-type frequency, cell-type expression, and ps
 ### [notebooks/09 - R - Pre vs Post statisitcs.ipynb](https://github.com/allison-nau/cio-mass-cytometry/blob/e3cf4660abc4b87f57b6ee7c58f68ee4530209ce/notebooks/09%20-%20R%20-%20Pre%20vs%20Post%20statisitcs.ipynb)
 ### [notebooks/09 - R - Pre vs Post statisitcs.ipynb](TODO: Add Link for jason's github)  
 
-Uses diffcyt[^4] to calculate preliminary statistics for any desired models. The example shown here is pre vs post, regardless of response, for each of the following: differential abundance (cell population frequency), differential state for each functional marker for each cell population, and pseudobulk differenntial state for each functional marker with all non-excluded clusters combined.
+Use diffcyt[^4] to calculate preliminary statistics for any desired models. The example shown here is pre vs post, regardless of response, for each of the following: 
+- **differential abundance** (cell population frequency)
+- **differential state by cluster** for each functional marker (for each cell population) 
+- **pseudobulk differenntial state** for each functional marker with all non-excluded clusters combined
+  
+Note: multiple hypothesis correction is done across each inidividual model (i.e. each time diffcyt is run), not across all models run.   
 
 [^4]: Weber LM et al. "diffcyt: Differential discovery in high-dimensional cytometry via high-resolution clustering." *Communications Biology*, 2019 May 14;2:183. doi: 10.1038/s42003-019-0415-5.
 
@@ -183,13 +192,13 @@ Uses diffcyt[^4] to calculate preliminary statistics for any desired models. The
   
 - Each model has a csv of results stored in that model's subdirectory.   
   - Then all differential abundance models are combined into one csv, `WORKFLOW/stage_2_models/results_abundance_allmodels.csv`.  
-  - All differential state models for cell populations is stored in `WORKFLOW/stage_2_models/results_state_clusters_allmodels.csv`.   
-  - All differential state models for pseudobulk is stored in `WORKFLOW/stage_2_models/results_state_bulk_allmodels.csv`. 
+  - All differential state models for cell populations are stored in `WORKFLOW/stage_2_models/results_state_clusters_allmodels.csv`.   
+  - All differential state models for pseudobulk are stored in `WORKFLOW/stage_2_models/results_state_bulk_allmodels.csv`. 
   - `WORKFLOW/stage_2_models/results_allmodels.xlsx` combines the previous 3 csv files into a multi-sheet excel file.
 
 For differential abundance we are using the method "diffcyt-DA-edgeR". For differential state of functional markers across cell populations, we are using "diffcyt-DS-limma".
   
-For each model, a sub output directory should be specified to store that models results, as well as a nickname for the model to be used when combining the results into one summary file. The SSE object should be filtered on to only include the samples included in that model, stored in `sub`. We then need to grab the relevant metadata information and store it in dataframe `subex`. We then set up a design and contrast matrix, checking that the sample_id order lines up with the `subex` for that model. The variables that we want to be part of the model should be specified using the function `createDesignMatrix`. The variable we are interested in testing should be specified using `limma::makeContrasts` to make the contrast matrix. Confirm that the correct merged clustering is specified.  
+For each model, a sub output directory should be specified to store that models results, as well as a nickname for the model to be used when combining the results into one summary file. The SSE object should be filtered on to only include the samples included in that model, stored in `sub`. (e.g. If you are comparing responders to non-responders pre treatment, you would filter on that specific timepoint). We then need to grab the relevant metadata information and store it in dataframe `subex`. We then set up a design and contrast matrix, checking that the sample_id order lines up with the `subex` for that model. The variables that we want to be part of the model should be specified using the function `createDesignMatrix`. The variable we are interested in testing should be specified using `limma::makeContrasts` to make the contrast matrix. Confirm that the correct merged clustering is specified.  
   
 Design and contrast matrixes are set up similarly to limma, which has a lot of resources on how to set up Design and Contrast matrices for more complicated experiments. Some resources to check out:  
 [Bioconductor limma User's Guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf)  
