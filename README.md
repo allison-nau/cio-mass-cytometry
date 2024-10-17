@@ -140,14 +140,16 @@ Ingest the Excel spreadsheet with cluster labels and save it as a JSON.
 
 ### [notebooks/07 - R - Run CATALYST stage 2.ipynb](https://github.com/jason-weirather/cio-mass-cytometry/blob/main/notebooks/07%20-%20R%20-%20Run%20CATALYST%20stage%202.ipynb)
 
-Use the cluster label JSON and the previous run of CATALYST to run the rest of the CATALYST pipeline, now with known cell labels generating figures.
-
+Use the cluster label JSON and the previous run of CATALYST to run the rest of the CATALYST pipeline, now with known cell labels generating figures.  
+  
+If there are clusters that you would like to remove (suspected non-cells, doublets), it is done so here. It is not recommended 
+  
 **Pre-requisites:** Requires the intermediate RDS file and UMAP embeddings, as well as the JSON-converted labels.
-
-**Post:** More final figures and data exports.
-
-👁️ **Review required:** There are many figures to inspect, and all may require some adjustments to properly format the image.
-
+  
+**Post:** More final figures and data exports. Exports SSE object with NA_exclude clusters removed: `WORKFLOW/stage_2/Intermediate_07_sce-frame.RDS`.
+  
+👁️ **Review required:** There are many figures to inspect, and all may require some adjustments to properly format the image. cell_order that is used to specify cluster order in figures should be adjusted. It should also be checked that only the correct clusters are removed, or that step should be completely skipped.
+  
 - **UMAP clusters:** The cell-type labeled UMAP should have cell types well clustered.
 - **Heatmap with FlowSOM labels:** This is not particularly great, but it shows both the FlowSOM and cell type labels.
 - **Heatmap labeled:** This is an excellent plot for verifying the cell type markers are where expected.
@@ -156,17 +158,42 @@ Use the cluster label JSON and the previous run of CATALYST to run the rest of t
 - **Median expression plots:** These are useful for seeing what the expression of functional markers are on each cell type.
 
 ### [notebooks/08 - Python - Output data.ipynb](https://github.com/jason-weirather/cio-mass-cytometry/blob/main/notebooks/08%20-%20Python%20-%20Output%20data.ipynb)
-
+  
 Save primary per-cell data and cell-type frequency, cell-type expression, and pseudobulk expression data.
-
+  
 **Pre-requisites:** Requires the intermediate files from both `stage_1` and `stage_2`, as well as our completed metadata.
-
+  
 **Post:** Some primary data outputs suitable for further analysis:
-
+  
 - `WORKFLOW/stage_2/Data_01_cellular_data.parquet`: A one-cell-per-row file with the cluster label of each cell, metadata labels, calculated UMAP embedding, and the expression of each marker (arcsinh transformed).
 - `WORKFLOW/stage_2/Data_02_cell_type_percent.csv`: For each sample, the percentage of each cell type present.
 - `WORKFLOW/stage_2/Data_03_cell_type_expression_mean_median.csv`: For each cell type in each sample, the mean and median expressions of each marker.
 - `WORKFLOW/stage_2/Data_04_pseudobulk_expression_mean_median.csv`: For each sample, the pseudobulk mean and median expression of each marker.
+
+### [notebooks/09 - R - Pre vs Post statisitcs.ipynb](TODO: Add Link for jason's github)
+
+Uses diffcyt to calculate preliminary statistics for any desired models. The example shown here is pre vs post, regardless of response, for each of the following: differential abundance (cell population frequency), differential state for each functional marker for each cell population, and pseudobulk differenntial state for each functional marker with all non-excluded clusters combined.
+
+**Pre-requisites:** Requires the intermediate files from `stage_2` including the SSE object from notebook 07 `WORKFLOW/stage_2/Intermediate_07_sce-frame.RDS`.  
+
+**Post:** Preliminary statistics for any models included in the notebook, as well as some additional figures.
+  
+- Each model has a csv of results stored in that model's subdirectory.   
+  - Then all differential abundance models are combined into one csv, `WORKFLOW/stage_2_models/results_abundance_allmodels.csv`.  
+  - All differential state models for cell populations is stored in `WORKFLOW/stage_2_models/results_state_clusters_allmodels.csv`.   
+  - All differential state models for pseudobulk is stored in `WORKFLOW/stage_2_models/results_state_bulk_allmodels.csv`. 
+  - `WORKFLOW/stage_2_models/results_allmodels.xlsx` combines the previous 3 csv files into a multi-sheet excel file.
+
+For differential abundance we are using the method "diffcyt-DA-edgeR". For differential state of functional markers across cell ppulations, we are using "diffcyt-DS-limma".
+  
+For each model, a sub output directory should be specified to store that models results, as well as a nickname for the model to be used when combining the results of multiple models into one summary excel file. The SSE object should be filtered on to only include the samples included in that model, stored in `sub`. We then need to grab the relevant metadata information and store it in dataframe `subex` We then set up a design and contrast matrix, checking that the sample_id order lines up with the `subex` for that model. The variables that we want to be part of the model should be specified using the function `createDesignMatrix`. The variable we are interested in testing should be specified using ``limma::makeContrasts``. Confirm that the correct merged clustering is specified.  
+  
+Design and contrast matrixes are set up similarly to limma, which has a lot of resources on how to set up Design and Contrast matrices for more complicated experiments. Some resources to check out:  
+[Bioconductor limma User's Guide](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf)  
+[A guide to creating design matrices for gene expression experiments, Law et al, 2020](https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf)  
+  
+  A visual summary of each model should be produced (boxplots, etc.) to assist in evaluating if the model has a performance issue. For example, if there are too many 0s in the data you may get a statisitcally significant functional marker change, which has no biological relevance. Over-fitted models may also give inflated p-values.
+
 
 ## CLI Description
 
