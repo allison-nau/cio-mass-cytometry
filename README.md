@@ -97,7 +97,9 @@ You may need to delete some headers if you don't have the information on sample 
 **Sheet Sample Manifest**:  
 - All meta data describing each fcs file should be here  
 - There must be a column for "Sample Name" and "Sample Display Name". Note that some plots will use the "Sample Name" as the "Sample Display Name".  
-- Column "Include (default TRUE)" can be left blank if all files are included. Note: any staining controls should definitely be included in the clustering. They can be removed later before performing any statisitcal test.  
+- Column "Include (default TRUE)" can be left blank if all files are included.   
+  - Note: any staining controls should definitely be included in the clustering. They can be removed later before performing any statisitcal test.  
+    - Technical replicates can be used to check for batch effects, both by looking at the staining distribution for every channel, but also for the abundance of every cell population.  
 - Column "FCS file" should have the relative path to each FCS File.  
 - If you later want to change your metadata, adjusting the order the samples appear in the worksheet will have a similar effect as changing the random seed, so if you have already clustered once and are just redoing things to change the meta data, consider keeping the order the "FCS File"s appear in the notebook the same.  
 - Any additional meta data should be added as columns to this sheet. (e.g. Timepoint, Cohort, Response, Patient_ID). If you have multiple timepoints for the same patient, you must include a column each for both Timepoint and Patient ID information.  
