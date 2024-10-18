@@ -214,11 +214,10 @@ Note: multiple hypothesis correction is done across each inidividual model (i.e.
   
 **Post:** Preliminary statistics for any models included in the notebook, as well as some additional figures.
   
-- Each model has a csv of results stored in that model's subdirectory.   
-  - Then all differential abundance models are combined into one csv, `WORKFLOW/stage_2_models/results_abundance_allmodels.csv`.  
-  - All differential state models for cell populations are stored in `WORKFLOW/stage_2_models/results_state_clusters_allmodels.csv`.   
-  - All differential state models for pseudobulk are stored in `WORKFLOW/stage_2_models/results_state_bulk_allmodels.csv`. 
-  - `WORKFLOW/stage_2_models/results_allmodels.xlsx` combines the previous 3 csv files into a multi-sheet excel file.
+- All differential abundance models are combined into one csv, `WORKFLOW/stage_2_models/results_abundance_allmodels.csv`.  
+- All differential state models for cell populations are stored in `WORKFLOW/stage_2_models/results_state_clusters_allmodels.csv`.   
+- All differential state models for pseudobulk are stored in `WORKFLOW/stage_2_models/results_state_bulk_allmodels.csv`. 
+- `WORKFLOW/stage_2_models/results_allmodels.xlsx` combines the previous 3 csv files into a multi-sheet excel file.
 
 For differential abundance we are using the method "diffcyt-DA-edgeR". For differential state of functional markers across cell populations, we are using "diffcyt-DS-limma".
   
