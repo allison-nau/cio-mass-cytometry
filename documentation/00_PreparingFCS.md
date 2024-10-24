@@ -1,4 +1,4 @@
-### [notebooks/00 - Python - Stage example data.ipynb](/notebooks/00%20-%20Python%20-%20Stage%20example%20data.ipynb)
+# [notebooks/00 - Python - Stage example data.ipynb](/notebooks/00%20-%20Python%20-%20Stage%20example%20data.ipynb)
 
 This initial step copies the FCS files to a `data/` folder in your local environment, sets up the `WORKFLOW/` directory where files used and created will reside, and the `scripts/` directory where the R script used for ingesting the project metadata resides.
 

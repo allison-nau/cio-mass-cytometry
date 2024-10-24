@@ -1,0 +1,25 @@
+
+# [notebooks/04 - R - Run CATALYST stage 1.ipynb](/notebooks/04%20-%20R%20-%20Run%20CATALYST%20stage%201.ipynb)
+
+Use the metadata JSON you created to run CATALYST for the first stage of the pipeline and over-clustering.
+
+**Pre-requisites:** Requires your accurately filled-in and JSON-converted metadata `WORKFLOW/stage_1/04-metadata-completed.json`, and needs the `scripts/readDataset.R` helper script to automate the ingestion.
+
+**Post:** There are many figures and data generated here. Figures will be discussed in the review notes, and there are several intermediate data files generated.
+
+👁️ **Review required:** There are many things to check here.
+
+- **Plot quality:** You may need to adjust parameters across any plots to get formatting how you like it.
+- **Cell counts plot:** Does it indicate that some samples should be outright dropped? If yes, they can be dropped by flagging them in the metadata spreadsheet.
+- **MDS plots:** The dimensional reduction should be inspected for any strong outlier samples that may have issues that need follow-up in FlowJo or more manual inspections. It should also be used to understand if any batch effects are prominent in the dataset because strong batch effects may interfere with clustering efficacy. In the example data, a strong difference is seen with `Timepoint` due to our simulated biological effect.
+- **NRS plots:** These can help inform what is driving the signal in the MDS plots. Here, you can see the injected signal from CD8+ T cells pushing differences in the MDS.
+- **Pseudobulk plot:** It may help to inform if some particular marker has aberrant expression on a particular sample.
+- **FlowSOM clustering:** The most important question to ask is if the clustering count is high enough to capture all the cell populations you are interested in labeling. 
+  - If you try to set the clustering of FlowSOM too low, then distinct populations could be combined together erroneously. If you do not see all the populations you would like identified, or the type marker plot shows mixed clusters, you may need to increase the number of clusters you are generating (e.g. 14x14 SOM grid for 50 clusters).
+  - If you have batch effects present, this can be exacerbated because you may need different clusters for each batch. If you see batches in the MDS, and you see batches here, and you see batches in the upcoming UMAP, it may be time to stop and treat your batches as separate analysis projects for cell-type assignment. 
+  - Sometimes changing the random seed will affect how well a minor population separates out. 
+  - The list of markers to be clustered on should also be carefully considered. Markers with QC issues (no clear separation between positive and negative or major spill over from another channel) may need to be excluded. CATALYST currently clusters all markers at equal weight, which means panels that are heavily focused in one lineage may struggle to separate major lineages from each other. For example, if you have a long list of markers that separate out T cell sub-populations, but only one myeloid marker, you may see mixed populations that you would never see if you were manually gating. First try increasing the number of clusters. If that does not work, consider also reducing the number of markers to be clustered on in an over-represented lineage or increasing the number of markers in a lineage that is under-represented. If this issue cannot be solved by tweaking the markers you are clustering on and increasing the number of clusters, you may need to switch to a clustering method that allows you to weigh markers OR switch to a multi-stage clustering, where in the first round you would separate your major lineages from each other, and in the second round you would separate out your sub-populations.
+- **Type marker plot:** This is a great plot, but if you have an enormous amount of samples, you may need to downsample your SSE in preparation for this figure. This plot can be a useful reference when you are labeling your clusters because you can understand, for both phenotypic and functional markers, if their distribution indicates a cluster is a particular cell type. It could also help you see if you may have erroneously combined some populations. If there are clusters that are mixed populations, you may need to adjust the number of clusters or adjust the markers used for clustering.
+- **UMAP by `cluster_id`:** The clusters should look clustered on the UMAP.
+- **UMAP expression plots:** This is important to look at to see if you have expected cell populations clustered into single clusters. If you see cell populations consistently showing up in two clusters, this could indicate that either (a) you have erroneously passed in a barcoding marker as a cell typing marker (happens with CD45 sometimes), or (b) you have a batch effect, and it's time to analyze that batch separately for cell-type assignment (or execute some batch effect correcting method out of scope here).
+- **Multi-heatmap:** See cluster expression in samples to help understand any oddball samples.
