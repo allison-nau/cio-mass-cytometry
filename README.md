@@ -29,7 +29,7 @@ Jupyter notebooks saved in `notebooks/` contain all the steps to work through a 
 All steps assume you have a fully capable environment needed by this pipeline installed; using the Docker may be the easiest way to set up your environment. 
 
 ## Table of contents for detailed instructions, using an example dataset:
-### [00 - Stage Example Data](/documentation/01_PreparingFCS.md)
+### [00 - Stage Example Data](/documentation/00_PreparingFCS.md)
 
 Using python, this initial step copies the FCS files to a `data/` folder in your local environment, sets up the `WORKFLOW/` directory where files used and created will reside, and the `scripts/` directory where the R script used for ingesting the project metadata resides.
 
