@@ -1,0 +1,4 @@
+cio_mass_cytometry/data/*.fcs filter=lfs diff=lfs merge=lfs -text
+cio_mass_cytometry/data/*.xlsx filter=lfs diff=lfs merge=lfs -text
+notebooks/*.ipynb filter=lfs diff=lfs merge=lfs -text
+*.ipynb filter=lfs diff=lfs merge=lfs -text
