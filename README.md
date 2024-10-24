@@ -70,7 +70,7 @@ Use the cluster label JSON and the previous run of CATALYST to run the rest of t
 
 Save primary per-cell data and cell-type frequency, cell-type expression, and pseudobulk expression data, using python. (This can also be done via R).
 
-### [09 Output Data](/documentation/09_diffcyt.md)
+### [09 diffcyt](/documentation/09_diffcyt.md)
 
 Use diffcyt[^4] to calculate preliminary statistics for any desired models. The example shown here is pre vs post, regardless of response, for each of the following: 
 - **differential abundance** (cell population frequency)
