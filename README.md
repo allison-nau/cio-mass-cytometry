@@ -4,6 +4,9 @@ This pipeline helps streamline the workflow of CATALYST[^1].
 
 [^1]: Nowicka M et al. "CyTOF workflow: differential discovery in high-throughput high-dimensional cytometry datasets." *F1000Res.* 2017 May 26;6:748. doi: 10.12688/f1000research.11622.3.
 
+## Table of contents for more detailed instructions:
+[Prepare FCS files](/documentation/01_PreparingFCS.md)
+
 ## Quickstart
 
 Get the Docker image and start a JupyterLab server. The following is an example on Linux, running the JupyterLab server as yourself:
