@@ -1,6 +1,6 @@
 # [notebooks/02 - Python - Create metadata template.ipynb](/notebooks/02%20-%20Python%20-%20Create%20metadata%20template.ipynb)
 
-We use a Python CLI created here to generate a new blank metadata template sheet and then add on the sample names and file paths programmatically.
+We use a Python CLI created here to generate a new blank metadata template sheet and then add on the sample names and file paths programmatically. This creates an excel file to be filled out with the required meta data for your sample files (timepoint, batch, etc.) and categorization of your panel markers (phenotype, functional).
 
 **Pre-requisites:** Nothing is required.
 
