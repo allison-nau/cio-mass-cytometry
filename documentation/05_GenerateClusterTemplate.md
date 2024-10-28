@@ -1,6 +1,6 @@
 # [notebooks/05 - Python - Generate cluster template.ipynb](/notebooks/05%20-%20Python%20-%20Generate%20cluster%20template.ipynb)
 
-Take the CATALYST outputs and produce a worksheet of unlabeled clusters and generate figures.
+Take the CATALYST outputs and produce an Excel worksheet of unlabeled clusters and generate figures.
 
 **Pre-requisites:** Uses the metadata converted JSON `WORKFLOW/stage_1/04-metadata-completed.json`, and the four `WORKFLOW/stage_1/Intermediate_*` files from the previous step.
 
