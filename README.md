@@ -91,3 +91,5 @@ Use diffcyt[^4] to calculate preliminary statistics for any desired models. The 
 ---
 
 ### [Description for how to use command line tools](/documentation/CLI_Description.md)
+  
+Command line tools for assistance in reading sample and panel meta data.  
